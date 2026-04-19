@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container py-4">
+
+  {# ================= HERO BANNER ================= #}
+  <section class="row align-items-center mb-5 bg-light rounded-4 p-4 p-md-5 shadow-sm">
+    <div class="col-md-6 mb-4 mb-md-0">
+      <p class="text-uppercase text-muted small mb-1">Book Library</p>
+      <h1 class="display-5 fw-bold mb-3">
+        Special deals on the books you love.
+      </h1>
+      <p class="lead text-muted mb-4">
+        Discover hand-picked titles, trending bestsellers, and timeless classics. 
+        New books added every week by our community.
+      </p>
+      <div class="d-flex flex-column flex-sm-row gap-2">
+        <a href="{% url 'displaybooks' %}" class="btn btn-primary btn-lg">
+          Browse All Books
+        </a>
+        <a href="{% url 'search_books' %}" class="btn btn-outline-secondary btn-lg">
+          Search Catalog
+        </a>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      {% if featured %}
+      <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+        <div class="row g-0">
+          <div class="col-5">
+            {% if featured.picture %}
+            <a href="{% url 'book_detail' featured.id %}">
+              <img src="{{ featured.picture.url }}" alt="{{ featured.name }}"
+                class="img-fluid h-100 w-100" style="object-fit: cover;">
+            </a>
+            {% endif %}
+          </div>
+          <div class="col-7">
+            <div class="card-body">
+              <span class="badge bg-danger-subtle text-danger mb-2">
+                Special Pick
+              </span>
+              <h5 class="card-title text-truncate">{{ featured.name }}</h5>
+              <p class="card-text text-muted small mb-2">
+                From {{ featured.username }}
+              </p>
+              <p class="fs-5 fw-bold mb-3">${{ featured.price }}</p>
+              <a href="{% url 'book_detail' featured.id %}" class="btn btn-sm btn-primary">
+                View Details
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% else %}
+        <div class="text-center text-muted">
+          No featured book yet. Add one from "Post a Book".
+        </div>
+      {% endif %}
+    </div>
+  </section>
+
+  {# ================= CATEGORIES STRIP ================= #}
+  <section class="mb-5">
+    <h2 class="h4 mb-3">Shop by Category</h2>
+    <div class="row g-3">
+      <div class="col-6 col-md-3">
+        <a href="{% url 'search_books' %}?q=fiction" class="text-decoration-none">
+          <div class="card h-100 text-center border-0 shadow-sm rounded-4 py-3">
+            <div class="fs-2 mb-2">📖</div>
+            <div class="fw-semibold">Fiction</div>
+          </div>
+        </a>
+      </div>
+      <div class="col-6 col-md-3">
+        <a href="{% url 'search_books' %}?q=non-fiction" class="text-decoration-none">
+          <div class="card h-100 text-center border-0 shadow-sm rounded-4 py-3">
+            <div class="fs-2 mb-2">📚</div>
+            <div class="fw-semibold">Non-fiction</div>
+          </div>
+        </a>
+      </div>
+      <div class="col-6 col-md-3">
+        <a href="{% url 'search_books' %}?q=children" class="text-decoration-none">
+          <div class="card h-100 text-center border-0 shadow-sm rounded-4 py-3">
+            <div class="fs-2 mb-2">🧸</div>
+            <div class="fw-semibold">Children's Books</div>
+          </div>
+        </a>
+      </div>
+      <div class="col-6 col-md-3">
+        <a href="{% url 'search_books' %}?q=classic" class="text-decoration-none">
+          <div class="card h-100 text-center border-0 shadow-sm rounded-4 py-3">
+            <div class="fs-2 mb-2">🕰️</div>
+            <div class="fw-semibold">Classics</div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  {# ================= BESTSELLERS GRID ================= #}
+  <section class="mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h2 class="h4 mb-0">Bestsellers</h2>
+      <a href="{% url 'displaybooks' %}" class="small text-decoration-none">View all</a>
+    </div>
+
+    {% if bestsellers %}
+    <div class="row g-4">
+      {% for b in bestsellers %}
+      <div class="col-6 col-md-3">
+        <div class="card h-100 card-elevated">
+          {% if b.picture %}
+          <a href="{% url 'book_detail' b.id %}">
+            <img src="{{ b.picture.url }}" alt="{{ b.name }}"
+                  class="card-img-top" style="height: 220px; object-fit: cover;">
+          </a>
+          {% endif %}
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title text-truncate">{{ b.name }}</h5>
+            <p class="text-muted small mb-2">{{ b.username }}</p>
+            <p class="fw-bold mb-3">${{ b.price }}</p>
+            <a href="{% url 'book_detail' b.id %}" class="btn btn-sm btn-primary mt-auto">
+              View
+            </a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+      <div class="alert alert-info">No books available yet. Post a book to get started!</div>
+    {% endif %}
+  </section>
+
+  {# ================= SIGNUP SECTION ================= #}
+  <section class="mb-5">
+    <div class="bg-dark text-light rounded-4 p-4 p-md-5 text-center">
+      <h2 class="h4 mb-3">Get weekly book deals</h2>
+      <p class="text-light opacity-75 mb-4">
+        Subscribe to receive hand-picked recommendations, discounts, and new arrivals.
+      </p>
+      <form class="row g-2 justify-content-center" method="post" action="#">
+        {% csrf_token %}
+        <div class="col-12 col-md-4">
+          <input type="email" class="form-control" placeholder="Enter your email" required>
+        </div>
+        <div class="col-12 col-md-auto">
+          <button class="btn btn-primary px-4" type="submit" disabled>
+            Coming Soon
+          </button>
+        </div>
+      </form>
+      <div class="small mt-2 opacity-75">
+        * Signup is display-only for now (no emails will be sent).
+      </div>
+    </div>
+  </section>
+
+</div>
+{% endblock %}

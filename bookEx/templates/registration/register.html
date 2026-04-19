@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="min-height:70vh;">
+  <div class="card card-elevated shadow-sm" style="width: 480px;">
+    <div class="card-body p-4">
+      <h2 class="h4 mb-3 text-center">Create your account</h2>
+      <p class="text-muted text-center mb-4">It’s quick and free.</p>
+
+      {# top-level (non-field) errors #}
+      {% if form.non_field_errors %}
+        <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+      {% endif %}
+
+      <form method="post" novalidate>
+        {% csrf_token %}
+
+        <div class="mb-3">
+          <label class="form-label" for="{{ form.username.id_for_label }}">Username</label>
+          {{ form.username|add_class:"form-control form-control-lg" |attr:"placeholder:Username" |attr:"autocomplete:username" }}
+          {% if form.username.errors %}<div class="text-danger small">{{ form.username.errors }}</div>{% endif %}
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="{{ form.password1.id_for_label }}">Password</label>
+          {{ form.password1|add_class:"form-control form-control-lg" |attr:"placeholder:Password" |attr:"autocomplete:new-password" }}
+          <div class="form-text">8+ chars; mix of letters, numbers, symbols recommended.</div>
+          {% if form.password1.errors %}<div class="text-danger small">{{ form.password1.errors }}</div>{% endif %}
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="{{ form.password2.id_for_label }}">Confirm Password</label>
+          {{ form.password2|add_class:"form-control form-control-lg" |attr:"placeholder:Confirm password" |attr:"autocomplete:new-password" }}
+          {% if form.password2.errors %}<div class="text-danger small">{{ form.password2.errors }}</div>{% endif %}
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">
+          <i class="bi bi-person-plus"></i> Create Account
+        </button>
+      </form>
+
+      <hr class="my-4">
+
+      <div class="text-center small">
+        <p class="mb-0">
+          Already have an account?
+          <a href="{% url 'login' %}" class="text-decoration-none">Log in</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

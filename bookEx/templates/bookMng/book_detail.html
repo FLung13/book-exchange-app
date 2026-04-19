@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block sidenav %}
+   {% for item in item_list %}
+      <li>
+        <a href="{{ item.link }}">  {{ item.item }} </a>
+      </li>
+   {% endfor %}
+{% endblock sidenav %}
+
+{% block content %}
+    <div class="row g-4 align-items-start">
+      <!-- Cover -->
+      <div class="col-12 col-md-4">
+        <div class="card card-elevated">
+          <img src="{{ book.picture.url }}" class="card-img-top" alt="{{ book.name }} cover">
+        </div>
+      </div>
+
+      <!-- Details -->
+      <div class="col-12 col-md-8">
+        <div class="d-flex align-items-center gap-2 mb-2">
+          <h1 class="h3 mb-0">{{ book.name }}</h1>
+          <span class="badge badge-soft rounded-pill">${{ book.price }}</span>
+        </div>
+
+        <!-- Average rating display -->
+        <div class="mb-2">
+          <span class="star-bar" aria-label="Average rating {{ avg_rating }} out of 5">
+            <span class="stars-grey">★★★★★</span>
+            <span class="stars-gold" style="width: {{ star_fill }}%;">★★★★★</span>
+          </span>
+          <small class="text-muted ms-2">{{ avg_rating }} ({{ total_ratings }} ratings)</small>
+        </div>
+
+        <div class="text-muted mb-3 small">
+          <div><i class="bi bi-person"></i> Posted by: {{ book.username }}</div>
+          <div><i class="bi bi-calendar2"></i> {{ book.publishdate }}</div>
+          <div><i class="bi bi-link-45deg"></i>
+            <a href="{{ book.web }}" target="_blank" rel="noopener">Website</a>
+          </div>
+          <div><i class="bi bi-tag"></i> Category: {{ book.get_category_display }}</div>
+        </div>
+
+
+        <!-- Actions -->
+        <div class="d-flex flex-wrap gap-2 mb-4">
+          <a class="btn btn-success" href="{% url 'cart_add' book.id %}">
+            <i class="bi bi-cart-plus"></i> Add to Cart
+          </a>
+
+          {% if user.is_authenticated %}
+            {% if is_favorite %}
+              <a class="btn btn-warning" href="{% url 'toggle_favorite' book.id %}">
+                <i class="bi bi-star-fill"></i> Remove Favorite
+              </a>
+            {% else %}
+              <a class="btn btn-outline-warning" href="{% url 'toggle_favorite' book.id %}">
+                <i class="bi bi-star"></i> Add to Favorites
+              </a>
+            {% endif %}
+          {% else %}
+            <a class="btn btn-outline-secondary" href="{% url 'login' %}">
+              <i class="bi bi-box-arrow-in-right"></i> Login to favorite
+            </a>
+          {% endif %}
+
+          {# 🔴 Delete button: only owner or admin 🔴 #}
+          {% if user.is_authenticated and user.is_superuser or user.is_authenticated and user == book.username %}
+            <form method="post" action="{% url 'book_delete' book.id %}" class="d-inline">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-danger">
+                <i class="bi bi-trash"></i> Delete Book
+              </button>
+            </form>
+          {% endif %}
+        </div>
+
+        <!-- Rate this book -->
+        <div class="border rounded p-3">
+          <h5 class="mb-2">Rate this Book</h5>
+          {% if user.is_authenticated %}
+            <div class="rate">
+              {% for i in "12345" %}
+                <a href="{% url 'rate_book' book.id i|add:'0' %}"
+                   class="{% if user_rating|default:0|add:0 >= i|add:0 %}text-warning{% else %}text-secondary{% endif %}"
+                   aria-label="Rate {{ i }} out of 5">★</a>
+              {% endfor %}
+            </div>
+          {% else %}
+            <p class="mb-0"><a href="{% url 'login' %}">Log in</a> to rate this book.</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+{% endblock content %}

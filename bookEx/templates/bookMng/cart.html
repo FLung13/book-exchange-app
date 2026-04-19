@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<h2 class="mb-4">Shopping Cart</h2>
+
+<div class="row">
+  <!-- Left side: Cart Items (2/3 width) -->
+  <div class="col-md-8">
+    {% if items %}
+      <!-- Cart Items -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title mb-3">Cart Items</h5>
+          {% for i in items %}
+          <div class="row mb-3 pb-3 border-bottom">
+            <div class="col-3">
+              <img src="{{ i.book.picture.url }}" class="img-fluid" alt="{{ i.book.name }}">
+            </div>
+            <div class="col-6">
+              <h6><a href="{% url 'book_detail' i.book.id %}">{{ i.book.name }}</a></h6>
+              <p class="text-muted mb-1">${{ i.book.price }}</p>
+              <div class="btn-group btn-group-sm mb-2">
+                <a href="{% url 'cart_update_qty' i.book.id 'decrease' %}" class="btn btn-outline-secondary">-</a>
+                <span class="btn btn-outline-secondary disabled">{{ i.qty }}</span>
+                <a href="{% url 'cart_update_qty' i.book.id 'increase' %}" class="btn btn-outline-secondary">+</a>
+              </div>
+              <div>
+                {% if user.is_authenticated %}
+                <a href="{% url 'cart_move_to_favorite' i.book.id %}" class="btn btn-sm btn-link">Save for later</a>
+                {% endif %}
+                <a href="{% url 'cart_remove' i.book.id %}" class="btn btn-sm btn-link text-danger">Remove</a>
+              </div>
+            </div>
+            <div class="col-3 text-end">
+              <strong>${{ i.line_total }}</strong>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Favorites Section -->
+      {% if favorite_books %}
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title mb-3">Saved for Later</h5>
+          <div class="row">
+            {% for book in favorite_books %}
+            <div class="col-6 col-md-3 mb-3">
+              <img src="{{ book.picture.url }}" class="img-fluid mb-2" alt="{{ book.name }}">
+              <p class="small mb-1">{{ book.name }}</p>
+              <p class="small text-muted mb-2">${{ book.price }}</p>
+              <a href="{% url 'favorite_move_to_cart' book.id %}" class="btn btn-sm btn-primary">Add to Cart</a>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+      {% endif %}
+
+    {% else %}
+      <div class="alert alert-info">Your cart is empty.</div>
+    {% endif %}
+  </div>
+
+  <!-- Right side: Checkout Summary (1/3 width) -->
+  <div class="col-md-4">
+    {% if items %}
+    <div class="card sticky-top" style="top: 20px;">
+      <div class="card-body">
+        <h5 class="card-title">Order Summary</h5>
+        <hr>
+        <div class="d-flex justify-content-between mb-2">
+          <span>Subtotal:</span>
+          <strong>${{ total }}</strong>
+        </div>
+        <div class="d-flex justify-content-between mb-3">
+          <span>Shipping:</span>
+          <span class="text-success">FREE</span>
+        </div>
+        <hr>
+        <div class="d-flex justify-content-between mb-3">
+          <strong>Total:</strong>
+          <strong class="text-primary">${{ total }}</strong>
+        </div>
+        <a href="{% url 'checkout' %}" class="btn btn-primary w-100 mb-2">Proceed to Checkout</a>
+        <a href="{% url 'displaybooks' %}" class="btn btn-outline-secondary w-100">Continue Shopping</a>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}

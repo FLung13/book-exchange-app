@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+  <h1 class="h3 mb-3">About BookEx 📚</h1>
+
+  <p class="lead">
+    Welcome to <strong>BookEx</strong> — a mini online bookstore where you can share, discover,
+    and manage books with just a few clicks.
+  </p>
+
+  <hr class="my-4">
+
+  <h2 class="h5 mb-2">What is BookEx?</h2>
+  <p>
+    BookEx is a web app created as part of the
+    <strong>CS 3337 – Software Engineering</strong> course.
+    It’s designed to feel like a small bookstore where users can:
+  </p>
+  <ul>
+    <li>📖 <strong>Post books</strong> with title, cover image, price, and website link</li>
+    <li>🧑‍💻 <strong>Log in</strong> and manage only the books they’ve posted</li>
+    <li>🛒 Add any quantity of a book to the <strong>shopping cart</strong></li>
+    <li>⭐ <strong>Rate</strong> and <strong>favorite</strong> books they like</li>
+    <li>🏷️ Browse books by <strong>category</strong> like Fiction, Classics, Children’s Books, and more</li>
+  </ul>
+
+  <h2 class="h5 mt-4 mb-2">Why was it built?</h2>
+  <p>
+    This project is a hands-on way to practice real software engineering concepts:
+  </p>
+  <ul>
+    <li>✅ Working with Django models, views, and templates</li>
+    <li>✅ Handling file uploads for book cover images</li>
+    <li>✅ Implementing user authentication and permissions</li>
+    <li>✅ Building features like search, filters, ratings, favorites, and a cart</li>
+    <li>✅ Keeping the UI clean, responsive, and easy to use</li>
+  </ul>
+
+  <h2 class="h5 mt-4 mb-2">Who can do what?</h2>
+  <p>
+    BookEx includes some basic rules to keep things organized:
+  </p>
+  <ul>
+    <li>👤 Logged-in users can post books and delete <strong>their own</strong> books.</li>
+    <li>🛡️ Admin users can delete <strong>any</strong> book if needed.</li>
+  </ul>
+
+  <h2 class="h5 mt-4 mb-2">Thanks for visiting! 🎉</h2>
+  <p>
+    BookEx isn’t a full commercial bookstore — it’s a learning project that shows what
+    happens behind the scenes of a real web app.
+    <br>
+    Feel free to explore, post a book, add some favorites, and fill up your cart!
+  </p>
+
+  <p class="mt-3 mb-0">
+    📩 Questions or feedback? You can reach us at:
+    <strong>BookEx@BookManagement.com</strong>
+  </p>
+</div>
+{% endblock %}

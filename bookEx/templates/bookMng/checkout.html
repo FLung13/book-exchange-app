@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container py-4">
+  <h2 class="mb-4">Checkout</h2>
+
+  {% if items %}
+  <div class="row">
+    <!-- Order Summary -->
+    <div class="col-md-8">
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5 class="mb-0">Order Summary</h5>
+        </div>
+        <div class="card-body">
+          {% for i in items %}
+          <div class="row mb-3 pb-3 {% if not forloop.last %}border-bottom{% endif %}">
+            <div class="col-2">
+              <img src="{{ i.book.picture.url }}" class="img-fluid" alt="{{ i.book.name }}">
+            </div>
+            <div class="col-6">
+              <h6>{{ i.book.name }}</h6>
+              <p class="text-muted mb-0">Quantity: {{ i.qty }}</p>
+            </div>
+            <div class="col-4 text-end">
+              <strong>${{ i.line_total }}</strong>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Shipping Information -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5 class="mb-0">Shipping Information</h5>
+        </div>
+        <div class="card-body">
+          <form method="post">
+            {% csrf_token %}
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label class="form-label">First Name</label>
+                <input type="text" class="form-control" name="first_name" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Last Name</label>
+                <input type="text" class="form-control" name="last_name" required>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Address</label>
+              <input type="text" class="form-control" name="address" required>
+            </div>
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label class="form-label">City</label>
+                <input type="text" class="form-control" name="city" required>
+              </div>
+              <div class="col-md-3">
+                <label class="form-label">State</label>
+                <input type="text" class="form-control" name="state" required>
+              </div>
+              <div class="col-md-3">
+                <label class="form-label">ZIP Code</label>
+                <input type="text" class="form-control" name="zip" required>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Phone</label>
+              <input type="tel" class="form-control" name="phone" required>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Payment Summary -->
+    <div class="col-md-4">
+      <div class="card sticky-top" style="top: 20px;">
+        <div class="card-header">
+          <h5 class="mb-0">Payment Summary</h5>
+        </div>
+        <div class="card-body">
+          <div class="d-flex justify-content-between mb-2">
+            <span>Subtotal:</span>
+            <span>${{ total }}</span>
+          </div>
+          <div class="d-flex justify-content-between mb-2">
+            <span>Shipping:</span>
+            <span class="text-success">FREE</span>
+          </div>
+          <div class="d-flex justify-content-between mb-2">
+            <span>Tax:</span>
+            <span>${{ total|floatformat:2 }}</span>
+          </div>
+          <hr>
+          <div class="d-flex justify-content-between mb-3">
+            <strong>Total:</strong>
+            <strong class="text-primary">${{ total }}</strong>
+          </div>
+          
+          <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success w-100 mb-2">
+              <i class="bi bi-check-circle"></i> Place Order
+            </button>
+          </form>
+          
+          <a href="{% url 'cart_detail' %}" class="btn btn-outline-secondary w-100">
+            <i class="bi bi-arrow-left"></i> Back to Cart
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% else %}
+  <div class="alert alert-warning">
+    Your cart is empty. <a href="{% url 'displaybooks' %}">Continue shopping</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

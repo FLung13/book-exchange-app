@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+.env
+db.sqlite3
+media/
+bookEx/static/uploads/
+.vscode/
+.idea/
+.DS_Store
+*.log

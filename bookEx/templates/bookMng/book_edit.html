@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<h1 class="h3 mb-4">Edit Book</h1>
+
+<div class="card card-elevated">
+  <div class="card-body">
+    <form action="" method="post" enctype="multipart/form-data" novalidate>
+      {% csrf_token %}
+
+      {% if form.non_field_errors %}
+        <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+      {% endif %}
+
+      <div class="row g-3">
+        <div class="col-12">
+          <label class="form-label" for="{{ form.name.id_for_label }}">Book Title</label>
+          {{ form.name }}
+          {% if form.name.errors %}<div class="text-danger small">{{ form.name.errors }}</div>{% endif %}
+        </div>
+
+        <div class="col-12 col-md-6">
+          <label class="form-label" for="{{ form.price.id_for_label }}">Price (USD)</label>
+          {{ form.price }}
+          {% if form.price.errors %}<div class="text-danger small">{{ form.price.errors }}</div>{% endif %}
+        </div>
+
+        <div class="col-12 col-md-6">
+          <label class="form-label" for="{{ form.web.id_for_label }}">Official Website</label>
+          {{ form.web }}
+          {% if form.web.errors %}<div class="text-danger small">{{ form.web.errors }}</div>{% endif %}
+        </div>
+
+        <div class="col-12">
+          <label class="form-label" for="{{ form.picture.id_for_label }}">Cover Image</label>
+          {% if book.picture %}
+            <div class="mb-2">
+              <img src="{{ book.picture.url }}" alt="Current cover" style="max-width: 240px; border-radius: .5rem;">
+              <p class="text-muted small mt-1">Current cover (leave blank to keep)</p>
+            </div>
+          {% endif %}
+          {{ form.picture }}
+          <img id="cover-preview" class="mt-3 d-none" style="max-width: 240px; border-radius: .5rem;"/>
+          <script>
+          document.addEventListener('DOMContentLoaded', function() {
+            const input = document.getElementById("{{ form.picture.id_for_label }}");
+            const img = document.getElementById("cover-preview");
+            if (input && img) {
+              input.addEventListener('change', () => {
+                const file = input.files && input.files[0];
+                if (file) {
+                  img.src = URL.createObjectURL(file);
+                  img.classList.remove('d-none');
+                } else {
+                  img.classList.add('d-none');
+                }
+              });
+            }
+          });
+          </script>
+          {% if form.picture.errors %}<div class="text-danger small">{{ form.picture.errors }}</div>{% endif %}
+          <div class="form-text">PNG/JPG recommended. A square or 3:4 image looks best.</div>
+        </div>
+          <div class="col-12 col-md-6">
+            <label class="form-label" for="{{ form.category.id_for_label }}">Category</label>
+            {{ form.category }}
+            {% if form.category.errors %}<div class="text-danger small">{{ form.category.errors }}</div>{% endif %}
+          </div>
+      </div>
+
+      <div class="d-flex gap-2 mt-4">
+        <button type="submit" class="btn btn-primary">
+          <i class="bi bi-check2-circle"></i> Update
+        </button>
+        <a href="{% url 'mybooks' %}" class="btn btn-outline-secondary">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock content %}
