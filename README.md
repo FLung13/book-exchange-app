@@ -134,7 +134,7 @@ http://127.0.0.1:8000/admin/
 
 ## Author
 
-Fredy Lung
+Fredy Lung\
 Software Developer
 
 ### Portfolio
